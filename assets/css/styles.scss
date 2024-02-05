@@ -1,0 +1,456 @@
+@import "keyframes";
+
+/*--------------------------------------------------------------
+  Root
+--------------------------------------------------------------*/
+:root {
+  --white: #fff;
+  --black: #000;
+  --light-grey: #eaeaea;
+  --dark-grey:  #9a9a9a;
+  --incoming: #d0aeff;
+  --outgoing: #aedbff;
+}
+
+/*--------------------------------------------------------------
+  Resets
+--------------------------------------------------------------*/
+* {
+  box-sizing: border-box;
+  font-family: sans-serif;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	outline: 0;
+}
+
+/*--------------------------------------------------------------
+  BEM
+--------------------------------------------------------------*/
+@mixin e($element) {
+  &__#{$element} {
+    @content;
+  }
+}
+
+@mixin m($modifier) {
+  &--#{$modifier} {
+    @content;
+  }
+}
+
+/*--------------------------------------------------------------
+  App
+--------------------------------------------------------------*/
+.app {
+  background-image: linear-gradient(to right bottom, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+  padding: 1rem;
+
+  >* {
+    margin: 0 auto;
+    max-width: 30rem;
+    width: 100%;
+  }
+
+  @include e(content) {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+/*--------------------------------------------------------------
+  Chat Box
+--------------------------------------------------------------*/
+.chatbox {
+  border-radius: 1rem;
+  display: flex;
+  flex: 1;
+  flex-flow: column;
+  height: 100%;
+  max-height: 57rem;
+  overflow: hidden;
+  width: 100%;
+
+  /* Header
+  ================================================= */
+  .header {
+    align-items: center;
+    background: var(--white);
+    box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, .05);
+    display: flex;
+    padding: 1rem 2rem;
+
+    .avatar {
+      align-items: center;
+      background: var(--light-grey);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      margin: 0 1rem 0 0;
+      padding: 1rem;
+
+      > svg {
+        $size: 100%;
+        color: var(--dark-grey);
+        fill: currentColor;
+        height: $size;
+        width: $size;
+      }
+    }
+
+    .about {
+      flex: 1;
+      @include e(name) {
+        color: var(--black);
+      }
+      @include e(status) {
+        color: var(--dark-grey);
+
+        .status {
+          $size: 0.5rem;
+          border-radius: 50%;
+          display: inline-block;
+          height: $size;
+          margin: 0 0.5rem 0 0;
+          width: $size;
+
+          &.online {
+            background: #51c728;
+          }
+        }
+      }
+    }
+
+    .back, .call, .video {
+      cursor: pointer;
+      svg {
+        $size: 2rem;
+        color: var(--dark-grey);
+        fill: currentColor;
+        height:$size;
+        width: auto;
+      }
+    }
+
+    .back, .call {
+      margin: 0 1rem 0 0;
+    }
+  }
+
+  /* Conversation
+  ================================================= */
+  .conversation {
+    background-image: url(https://www.toptal.com/designers/subtlepatterns/uploads/email-pattern.png);
+    display: flex;
+    flex: 1;
+    flex-flow: column-reverse;
+    height: 100%;
+    // padding: 0 1rem 0 0; // if there's a scroll bar
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 2rem;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    .bubble {
+      color: #333;
+      padding: 0.5rem;
+      max-width: 80%;
+
+      > div {
+        position: relative;
+      }
+
+      &:not(:last-child) {
+        margin: 0 0 0.5rem;
+      }
+
+      &.incoming {
+        background:  var(--incoming); // #64ad28;
+        border: .5rem solid  var(--incoming); // #64ad28;
+        border-radius: .75rem;
+        border-bottom-left-radius: .125rem;
+        margin-right: auto;
+      }
+      &.outgoing {
+        background:   var(--outgoing); // #009bda;
+        border: .5rem solid   var(--outgoing); // #009bda;
+        border-radius: .75rem;
+        border-bottom-right-radius: .125rem;
+        margin-left: auto;
+      }
+
+      @include e(typing) {
+        animation: hideMe 0s ease-in 2000ms forwards;
+        align-items: center;
+        display: flex;
+        height: 1.798rem;
+        padding: 0 0.5rem;
+  
+        .dot {
+          background: rgba(255, 255, 255, .7);
+          border-radius: 50%;
+          height: 7px;
+          margin-right: 4px;
+          vertical-align: middle;
+          width: 7px;
+          display: inline-block;
+          animation: typing 1.8s infinite ease-in-out;
+  
+          &:nth-child(1) {
+            animation-delay: 200ms;
+          }
+  
+          &:nth-child(2) {
+            animation-delay: 300ms;
+          }
+  
+          &:nth-child(3) {
+            animation-delay: 400ms;
+          }
+  
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+  
+      }
+
+      @include e(content) {
+        animation: showMe 0s ease-in 2000ms forwards;
+        height: 0;
+        opacity: 0;
+        width: 0;
+        @include m(text) {
+          //
+        }
+        @include m(emoji) {
+          font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;
+          font-variant-emoji: emoji;
+
+          &.big {
+            font-size: 4rem;
+            line-height: normal;
+          }
+        }
+        @include m(image) {
+          //
+        }
+        @include m(video) {
+          //
+        }
+        @include m(reaction) {
+          $circle: 2.5rem;
+          animation: reaction 600ms 2600ms 1 forwards;
+          align-items: center;
+          border-radius: 50%;
+          display: flex;
+          height: $circle;
+          justify-content: center;
+          overflow: hidden;
+          position: absolute;
+          transform: scale(0);
+          top: -50%;
+          width: $circle;
+
+          $align: -2.2rem;
+
+          &.incoming {
+            background: var(--incoming);
+            border: 0.125rem solid var(--white);
+            left: $align;
+          }
+    
+          &.outgoing {
+            background: var(--outgoing);
+            border: 0.125rem solid var(--white);
+            right: $align;
+          }
+        }
+      }
+    }
+  }
+
+  /* Typing
+  ================================================= */
+  .typing {
+    align-items: center;
+    background: var(--white);
+    border-top: 1px solid var(--light-grey);
+    display: flex;
+    padding:0 2rem;
+
+    input {
+      cursor: not-allowed;
+      &.input {
+        border: 0;
+        box-shadow: none;
+        color: var(--dark-grey);
+        flex: 1;
+        height: 4rem;
+        padding: 1rem 1rem 1rem 0;
+      }
+    }
+
+    .send {
+      cursor: pointer;
+      svg {
+        color: var(--dark-grey);
+        fill: currentColor;
+      }
+    }
+  }
+}
+
+
+
+/*--------------------------------------------------------------
+  Footer
+--------------------------------------------------------------*/
+footer {
+  color: var(--white);
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  padding: 1rem 0 0;
+
+  svg {
+    color: var(--white);
+    fill: currentColor;
+  }
+
+  .coded {
+    margin: 0 0 0.5rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  .copyright {
+    text-align: left;
+  }
+
+  .social {
+    text-align: right;
+  }
+
+  .copyright, .social {
+    flex: 1;
+    svg {
+      $size: 1.5rem;
+      height: 1.5rem;
+      width: auto;
+    }
+  }
+}
+
+
+/*--------------------------------------------------------------
+  Media Queries
+--------------------------------------------------------------*/
+
+$breakpoints: (
+  'x-small': 0,
+  'small': 320,
+  'medium': 768,
+  'large': 1280,
+  'x-large': 1920
+);
+
+@mixin media($key) {
+  $size: map-get($breakpoints, $key);
+
+  @if ($size) {
+    @media only screen and (min-width: #{$size}px) {
+      @content;
+    }
+  }
+
+  @else {
+    @error '`#{$key}` does not exist in $breakpoints';
+  }
+}
+
+/* Mobile
+================================================= */
+@include media(small) {
+  .chatbox {
+
+    .svg-small {
+      svg {
+        height: 1.2rem;
+        width: auto;
+      }
+    }
+
+    // header
+    .header {
+      .about {
+        .about__name {
+          font-size: 1.2rem;
+        }
+      }
+      .avatar {
+        $size: 3rem;
+        height: $size;
+        width: $size;
+      }
+      .back, .call, .video {
+        @extend .svg-small;
+      }
+    }
+
+    // typing
+    .typing {
+      .send {
+        @extend .svg-small;
+      }
+    }
+  }
+}
+
+/* Tablet
+================================================= */
+@include media(medium) {
+  .chatbox {
+
+    .svg-medium {
+      svg {
+        height: 1.5rem;
+        width: auto;
+      }
+    }
+
+    // header
+    .header {
+      .about {
+        .about__name {
+          font-size: 1.5rem;
+        }
+      }
+      .avatar {
+        $size: 3.5rem;
+        height: $size;
+        width: $size;
+      }
+      .back, .call, .video {
+        @extend .svg-medium;
+      }
+    }
+
+    // typing
+    .typing {
+      .send {
+        @extend .svg-medium;
+      }
+    }
+
+  }
+}
